@@ -5,3 +5,5 @@ on:
 jobs:
   deploy-itself-again:
     uses: titaneric/yew-examples/.github/workflows/deploy.yml@main
+    secrets:
+      personal-token: ${{ secrets.PERSONAL_TOKEN }}
