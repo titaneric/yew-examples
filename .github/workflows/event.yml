@@ -3,10 +3,5 @@ on:
   repository_dispatch:
     types: [deploy-again]
 jobs:
-  myEvent:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.client_payload.ref }}
-      - run: echo ${{ github.event.client_payload.sha }}
+  deploy-itself-again:
+    uses: titaneric/yew-examples/.github/workflows/deploy.yml
