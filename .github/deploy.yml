@@ -26,8 +26,9 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
           external_repository: titaneric/titaneric.github.io
           publish_branch: gh-pages
           publish_dir: ./yew-examples
+          destination_dir: ./yew-examples
           keep_files: true
