@@ -4,4 +4,4 @@ on:
     types: [deploy-again]
 jobs:
   deploy-itself-again:
-    uses: titaneric/yew-examples/.github/workflows/deploy.yml
+    uses: titaneric/yew-examples/.github/workflows/deploy.yml@main
