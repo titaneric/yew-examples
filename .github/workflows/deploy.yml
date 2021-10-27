@@ -28,9 +28,11 @@ jobs:
             ~/.cargo/git/db/
             $GITHUB_WORKSPACE/mdBook/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('mdBook/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
 
       - uses: actions/checkout@v2
-        if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         with:
           repository: 'titaneric/mdBook'
           ref: master
@@ -38,14 +40,14 @@ jobs:
           path: mdBook
 
       - name: Install build-essential
-        if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: sudo apt update && sudo apt install -y build-essential zstd
       - uses: actions-rs/toolchain@v1
-        if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         with:
           toolchain: stable
       - name: build mdbook executable
-        if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: cargo build --release
         working-directory: mdBook
 
