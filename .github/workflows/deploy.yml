@@ -67,6 +67,6 @@ jobs:
           personal_token: ${{ secrets.PERSONAL_TOKEN || secrets.personal-token }}
           external_repository: titaneric/titaneric.github.io
           publish_branch: gh-pages
-          publish_dir: $GITHUB_WORKSPACE/yew-examples/yew-examples
+          publish_dir: yew-examples/yew-examples
           destination_dir: ./yew-examples
           keep_files: true
