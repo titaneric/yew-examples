@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('mdBook/Cargo.lock') }}
 
       - uses: actions/checkout@v2
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        if: steps.mdbook_cache.outputs.cache-hit != 'true'
         with:
           repository: 'titaneric/mdBook'
           ref: master
@@ -38,17 +38,16 @@ jobs:
           path: mdBook
 
       - name: Install build-essential
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: sudo apt update && sudo apt install -y build-essential zstd
       - uses: actions-rs/toolchain@v1
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        if: steps.mdbook_cache.outputs.cache-hit != 'true'
         with:
           toolchain: stable
       - name: build mdbook executable
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: cargo build --release
         working-directory: mdBook
-
 
       - uses: actions/checkout@v2
         with:
@@ -66,6 +65,6 @@ jobs:
           personal_token: ${{ secrets.PERSONAL_TOKEN || secrets.personal-token }}
           external_repository: titaneric/titaneric.github.io
           publish_branch: gh-pages
-          publish_dir: ./yew-examples
+          publish_dir: $GITHUB_WORKSPACE/yew-examples/yew-examples
           destination_dir: ./yew-examples
           keep_files: true
