@@ -28,6 +28,10 @@ jobs:
       - name: Install build-essential
         # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: sudo apt update && sudo apt install -y build-essential zstd
+      - name: ls
+        run: ls 
+      - name: ls
+        run: ls $GITHUB_WORKSPACE/mdBook
       - uses: actions-rs/toolchain@v1
         # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         with:
