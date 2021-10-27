@@ -17,15 +17,47 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup mdBook
-        uses: peaceiris/actions-mdbook@v1
+      - uses: actions/cache@v2
+        name: check cache
+        id: mdbook_cache
         with:
-          mdbook-version: '0.4.10'
-          # mdbook-version: 'latest'
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            $GITHUB_WORKSPACE/mdBook/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('mdBook/Cargo.lock') }}
 
-      - run: mdbook build -d yew-examples
+      - uses: actions/checkout@v2
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        with:
+          repository: 'titaneric/mdBook'
+          ref: master
+          token: ${{ secrets.PERSONAL_TOKEN || secrets.personal-token }}
+          path: mdBook
+
+      - name: Install build-essential
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        run: sudo apt update && sudo apt install -y build-essential zstd
+      - uses: actions-rs/toolchain@v1
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        with:
+          toolchain: stable
+      - name: build mdbook executable
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        run: cargo build --release
+        working-directory: mdBook
+
+
+      - uses: actions/checkout@v2
+        with:
+          path: yew-examples
+      - name: ls
+        run: ls 
+      - name: build mdBook artifact
+        working-directory: yew-examples
+        run: $GITHUB_WORKSPACE/mdBook/target/release/mdbook build -d yew-examples
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
