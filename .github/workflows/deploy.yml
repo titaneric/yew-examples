@@ -25,6 +25,13 @@ jobs:
           ref: master
           token: ${{ secrets.PERSONAL_TOKEN || secrets.personal-token }}
           path: mdBook
+      - name: Install build-essential
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        run: sudo apt update && sudo apt install -y build-essential zstd
+      - uses: actions-rs/toolchain@v1
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        with:
+          toolchain: stable
       - uses: actions/cache@v2
         name: check cache
         id: mdbook_cache
@@ -38,13 +45,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('$GITHUB_WORKSPACE/mdBook/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - name: Install build-essential
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
-        run: sudo apt update && sudo apt install -y build-essential zstd
-      - uses: actions-rs/toolchain@v1
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
-        with:
-          toolchain: stable
       - name: build mdbook executable
         # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: cargo build --release
