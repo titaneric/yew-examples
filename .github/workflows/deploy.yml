@@ -17,6 +17,14 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
+
+      - uses: actions/checkout@v2
+        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
+        with:
+          repository: 'titaneric/mdBook'
+          ref: master
+          token: ${{ secrets.PERSONAL_TOKEN || secrets.personal-token }}
+          path: mdBook
       - uses: actions/cache@v2
         name: check cache
         id: mdbook_cache
@@ -30,15 +38,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('mdBook/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-
-      - uses: actions/checkout@v2
-        # if: steps.mdbook_cache.outputs.cache-hit != 'true'
-        with:
-          repository: 'titaneric/mdBook'
-          ref: master
-          token: ${{ secrets.PERSONAL_TOKEN || secrets.personal-token }}
-          path: mdBook
-
       - name: Install build-essential
         # if: steps.mdbook_cache.outputs.cache-hit != 'true'
         run: sudo apt update && sudo apt install -y build-essential zstd
